@@ -12,6 +12,20 @@ const recentPosts = (
 )
 	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
 	.slice(0, 3);
+
+// Get the 3 most recent lists
+// TypeScript doesn't know about the lists collection yet, so we use any
+const recentLists = (
+	await getCollection("lists" as any, ({ data }: any) => {
+		return import.meta.env.PROD ? data.draft !== true : true;
+	})
+)
+	.sort((a: any, b: any) => {
+		const dateA = a.data.updatedDate?.valueOf() || 0;
+		const dateB = b.data.updatedDate?.valueOf() || 0;
+		return dateB - dateA;
+	})
+	.slice(0, 3);
 ---
 
 <Layout>
@@ -115,6 +129,50 @@ const recentPosts = (
 				</a>
 			</div>
 		</div>
+
+		<!-- Recent Lists Section -->
+		{
+			recentLists.length > 0 && (
+				<div class="mb-12">
+					<h2 class="text-lg font-medium mb-8 text-gray-500 uppercase tracking-wider">
+						Recent Lists
+					</h2>
+					<ul class="space-y-6">
+						{recentLists.map((list: any) => (
+							<li class="post-item">
+								<a href={`/lists/${list.id}/`} class="block">
+									<div class="flex items-baseline">
+										<span class="font-medium text-gray-900 hover:text-indigo-500 transition-colors">
+											{list.data.title}
+										</span>
+										<span class="ml-2 text-xs text-gray-400">
+											<FormattedDate
+												date={list.data.updatedDate}
+											/>
+										</span>
+									</div>
+									{list.data.description && (
+										<div class="hidden post-description">
+											<div class="pt-3 pb-1 text-sm text-gray-600">
+												<p>{list.data.description}</p>
+											</div>
+										</div>
+									)}
+								</a>
+							</li>
+						))}
+					</ul>
+					<div class="mt-8">
+						<a
+							href="/lists"
+							class="text-sm text-gray-500 hover:text-indigo-500 transition-colors"
+						>
+							→ all lists
+						</a>
+					</div>
+				</div>
+			)
+		}
 	</div>
 </Layout>
 

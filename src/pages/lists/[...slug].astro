@@ -1,0 +1,24 @@
+---
+import { getCollection, render } from "astro:content";
+import ListPost from "../../layouts/ListPost.astro";
+
+// Generate static paths from the lists collection
+export async function getStaticPaths() {
+    const entries = await getCollection("lists");
+
+    return entries.map((entry) => ({
+        params: { slug: entry.id },
+        props: { entry },
+    }));
+}
+
+// Get the entry from props
+const { entry } = Astro.props;
+
+// Use the render function to render the content
+const { Content } = await render(entry);
+---
+
+<ListPost title={entry.data.title} updatedDate={entry.data.updatedDate}>
+    <Content />
+</ListPost>

@@ -77,7 +77,7 @@ This whole base is mostly nuclear powered now, I have a couple of nuclear reacto
 
 Still, in order to expand the base even further, and thanks to the power sharing capabilities that the space elevator provides, I have been expanding the solar fields attached to the space station as they can now also provide for the planetary base.
 
-![Nauvis orbit solar rails](/images/nauvis-orbit-solar-rails.png)
+![Nauvis orbit solar rails](/images/factorio-200h/nauvis-orbit-solar-rails.png)
 
 I have always been a great enjoyer of the Nyx's tubes mod and I have been using it extensively in this playthorugh. In my main base I have a big display that shows me the count of all the items I care about in the logistics network, as well as a very nice display that shows me the amount of each type of science I have stockpiled so I can easily decide which research to work on next. Factorio doesn't really provide a nice HUD for these kinds of information so the only choice here is to build one yourself!
 

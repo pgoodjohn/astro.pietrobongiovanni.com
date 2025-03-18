@@ -3,29 +3,170 @@ import HeaderLink from "./HeaderLink.astro";
 import { SITE_TITLE } from "../consts";
 ---
 
-<header class="py-4 border-b border-gray-100 mb-8">
-	<nav
-		class="container mx-auto px-4 flex justify-between items-center font-mono"
-	>
-		<h2 class="text-xl font-medium">
-			<a
-				href="/"
-				class="text-gray-800 hover:text-indigo-500 transition-colors"
+<header
+	class="fixed top-0 left-0 right-0 bg-white z-10 py-4 border-b border-gray-100 shadow-sm"
+>
+	<div class="container mx-auto px-4">
+		<nav class="flex justify-between items-center font-mono">
+			<h2 class="text-xl font-medium">
+				<a
+					href="/"
+					class="text-gray-800 hover:text-indigo-500 transition-colors"
+				>
+					{SITE_TITLE}
+				</a>
+			</h2>
+
+			<!-- Mobile menu button with hamburger/X animation -->
+			<button
+				id="mobile-menu-button"
+				class="lg:hidden text-gray-600 focus:outline-none relative w-6 h-6"
+				aria-label="Toggle menu"
 			>
-				{SITE_TITLE}
-			</a>
-		</h2>
-		<div class="flex space-x-6">
-			<HeaderLink
-				href="/"
-				class="text-gray-600 hover:text-indigo-500 transition-colors"
-				>Home</HeaderLink
+				<div class="hamburger-icon">
+					<span class="hamburger-bar hamburger-bar-1"></span>
+					<span class="hamburger-bar hamburger-bar-2"></span>
+					<span class="hamburger-bar hamburger-bar-3"></span>
+				</div>
+			</button>
+
+			<!-- Desktop navigation -->
+			<div class="hidden lg:flex lg:space-x-6">
+				<HeaderLink
+					href="/"
+					class="text-gray-600 hover:text-indigo-500 transition-colors"
+					>Home</HeaderLink
+				>
+				<HeaderLink
+					href="/blog"
+					class="text-gray-600 hover:text-indigo-500 transition-colors"
+					>Blog</HeaderLink
+				>
+				<HeaderLink
+					href="/lists"
+					class="text-gray-600 hover:text-indigo-500 transition-colors"
+					>Lists</HeaderLink
+				>
+			</div>
+		</nav>
+
+		<!-- Mobile navigation -->
+		<div
+			id="mobile-menu"
+			class="mobile-menu-closed lg:hidden overflow-hidden transition-all duration-300 ease-in-out max-h-0"
+		>
+			<div
+				class="flex flex-col space-y-4 py-4 opacity-0 transform translate-y-4 transition-all duration-300 ease-in-out"
+				id="mobile-menu-links"
 			>
-			<HeaderLink
-				href="/blog"
-				class="text-gray-600 hover:text-indigo-500 transition-colors"
-				>Blog</HeaderLink
-			>
+				<HeaderLink
+					href="/"
+					class="text-gray-600 hover:text-indigo-500 transition-colors"
+					>Home</HeaderLink
+				>
+				<HeaderLink
+					href="/blog"
+					class="text-gray-600 hover:text-indigo-500 transition-colors"
+					>Blog</HeaderLink
+				>
+				<HeaderLink
+					href="/lists"
+					class="text-gray-600 hover:text-indigo-500 transition-colors"
+					>Lists</HeaderLink
+				>
+			</div>
 		</div>
-	</nav>
+	</div>
 </header>
+
+<!-- Spacer to prevent content from being hidden under the fixed header -->
+<div class="h-20"></div>
+
+<style>
+	.mobile-menu-open {
+		max-height: 300px; /* Adjust based on your menu height */
+	}
+
+	.mobile-menu-closed {
+		max-height: 0;
+	}
+
+	.menu-links-visible {
+		opacity: 1 !important;
+		transform: translateY(0) !important;
+	}
+
+	/* Hamburger to X animation styles */
+	.hamburger-icon {
+		position: relative;
+		width: 100%;
+		height: 100%;
+	}
+
+	.hamburger-bar {
+		position: absolute;
+		left: 0;
+		height: 2px;
+		width: 100%;
+		background-color: currentColor;
+		border-radius: 2px;
+		transition: all 0.25s ease-in-out;
+	}
+
+	.hamburger-bar-1 {
+		top: 25%;
+	}
+
+	.hamburger-bar-2 {
+		top: 50%;
+		transform: translateY(-50%);
+	}
+
+	.hamburger-bar-3 {
+		bottom: 25%;
+	}
+
+	/* X state */
+	.menu-button-active .hamburger-bar-1 {
+		top: 50%;
+		transform: translateY(-50%) rotate(45deg);
+	}
+
+	.menu-button-active .hamburger-bar-2 {
+		opacity: 0;
+	}
+
+	.menu-button-active .hamburger-bar-3 {
+		bottom: 50%;
+		transform: translateY(50%) rotate(-45deg);
+	}
+</style>
+
+<script>
+	// Toggle mobile menu
+	document.addEventListener("DOMContentLoaded", () => {
+		const mobileMenuButton = document.getElementById("mobile-menu-button");
+		const mobileMenu = document.getElementById("mobile-menu");
+		const mobileMenuLinks = document.getElementById("mobile-menu-links");
+
+		if (mobileMenuButton && mobileMenu && mobileMenuLinks) {
+			mobileMenuButton.addEventListener("click", () => {
+				// Toggle menu open/closed classes
+				mobileMenu.classList.toggle("mobile-menu-closed");
+				mobileMenu.classList.toggle("mobile-menu-open");
+
+				// Toggle button active state
+				mobileMenuButton.classList.toggle("menu-button-active");
+
+				// Add a slight delay for the links animation
+				if (mobileMenu.classList.contains("mobile-menu-open")) {
+					setTimeout(() => {
+						mobileMenuLinks.classList.add("menu-links-visible");
+					}, 150);
+				} else {
+					mobileMenuLinks.classList.remove("menu-links-visible");
+				}
+			});
+		}
+	});
+</script>

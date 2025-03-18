@@ -1,0 +1,87 @@
+---
+import Layout from "../../layouts/DefaultLayout.astro";
+import { getCollection } from "astro:content";
+import FormattedDate from "../../components/FormattedDate.astro";
+import { SITE_TITLE, SITE_DESCRIPTION } from "../../consts";
+
+// Get all lists, filtering out drafts in production
+const lists = await getCollection("lists", ({ data }) => {
+    return import.meta.env.PROD ? data.draft !== true : true;
+});
+
+// Sort lists by updated date
+const sortedLists = lists.sort((a, b) => {
+    const dateA = a.data.updatedDate?.valueOf() || 0;
+    const dateB = b.data.updatedDate?.valueOf() || 0;
+    return dateB - dateA;
+});
+---
+
+<Layout title={`Lists | ${SITE_TITLE}`} description={SITE_DESCRIPTION}>
+    <div class="container mx-auto px-4 py-8 max-w-3xl font-mono">
+        <div
+            class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-8 rounded-md"
+        >
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    <svg
+                        class="h-5 w-5 text-yellow-400"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                        aria-hidden="true"
+                    >
+                        <path
+                            fill-rule="evenodd"
+                            d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z"
+                            clip-rule="evenodd"></path>
+                    </svg>
+                </div>
+                <div class="ml-3">
+                    <p class="text-sm text-yellow-700">
+                        <strong>Work in Progress:</strong> Just placeholder pages
+                        for now :)
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <h1 class="text-2xl font-bold mb-8 text-gray-800">Lists</h1>
+
+        <ul class="space-y-6">
+            {
+                sortedLists.map((list) => (
+                    <li class="list-item">
+                        <a href={`/lists/${list.id}/`} class="block">
+                            <div class="flex flex-col md:flex-row md:items-start gap-4">
+                                <div class="w-full">
+                                    <div class="flex items-baseline">
+                                        <span class="font-medium text-lg text-gray-900 hover:text-indigo-500 transition-colors">
+                                            {list.data.title}
+                                        </span>
+                                        <span class="ml-2 text-xs text-gray-400">
+                                            <FormattedDate
+                                                date={list.data.updatedDate}
+                                            />
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                ))
+            }
+        </ul>
+    </div>
+</Layout>
+
+<style>
+    .list-item {
+        border-bottom: 1px solid rgba(229, 231, 235, 0.5);
+        padding-bottom: 1.5rem;
+        cursor: pointer;
+    }
+
+    .list-item:last-child {
+        border-bottom: none;
+    }
+</style>
