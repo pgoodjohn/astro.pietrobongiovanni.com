@@ -11,4 +11,3 @@ export const LINKEDIN_URL = 'https://linkedin.com/in/pietrobongiovanni';
 
 // Additional site metadata
 export const AUTHOR_NAME = 'Pietro Bongiovanni';
-export const AUTHOR_HANDLE = 'pgoodjohn';
