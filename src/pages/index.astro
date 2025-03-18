@@ -1,53 +1,190 @@
 ---
 import Layout from "../layouts/DefaultLayout.astro";
+import { getCollection } from "astro:content";
+import FormattedDate from "../components/FormattedDate.astro";
+import { TWITTER_URL, GITHUB_URL, AUTHOR_HANDLE } from "../consts";
+
+// Get the 3 most recent blog posts
+const recentPosts = (
+	await getCollection("blog", ({ data }) => {
+		return import.meta.env.PROD ? data.draft !== true : true;
+	})
+)
+	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+	.slice(0, 3);
 ---
 
 <Layout>
-	<h1>🧑‍🚀 Hello, Astronaut!</h1>
-	<p>
-		Welcome to the official <a href="https://astro.build/">Astro</a> blog starter
-		template. This template serves as a lightweight, minimally-styled starting
-		point for anyone looking to build a personal website, blog, or portfolio
-		with Astro.
-	</p>
-	<p>
-		This template comes with a few integrations already configured in your
-		<code>astro.config.mjs</code> file. You can customize your setup with
-		<a href="https://astro.build/integrations">Astro Integrations</a> to add
-		tools like Tailwind, React, or Vue to your project.
-	</p>
-	<p>Here are a few ideas on how to get started with the template:</p>
-	<ul>
-		<li>Edit this page in <code>src/pages/index.astro</code></li>
-		<li>
-			Edit the site header items in <code
-				>src/components/Header.astro</code
+	<div class="container mx-auto px-4 py-16 max-w-3xl font-mono">
+		<!-- Hero Section -->
+		<div class="text-center mb-16">
+			<h1 class="text-4xl md:text-5xl font-bold mb-2">
+				I am Pietro<span class="text-indigo-500">.</span>
+			</h1>
+			<p class="text-gray-600 mb-6">@{AUTHOR_HANDLE}</p>
+
+			<div class="bg-gray-50 p-4 rounded-md shadow-sm inline-block mb-6">
+				<p class="text-lg">
+					I like to build things with software<span
+						class="text-indigo-500">.</span
+					>
+				</p>
+			</div>
+
+			<div class="flex justify-center space-x-6">
+				<a
+					href={TWITTER_URL}
+					aria-label="Twitter"
+					title="Twitter"
+					target="_blank"
+					rel="noopener noreferrer"
+					class="text-gray-500 hover:text-indigo-500 transition-colors"
+				>
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						viewBox="0 0 24 24"
+						width="24"
+						height="24"
+						class="fill-current"
+					>
+						<path
+							d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+						></path>
+					</svg>
+				</a>
+				<a
+					href={GITHUB_URL}
+					aria-label="GitHub"
+					title="GitHub"
+					target="_blank"
+					rel="noopener noreferrer"
+					class="text-gray-500 hover:text-indigo-500 transition-colors"
+				>
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						viewBox="0 0 24 24"
+						width="24"
+						height="24"
+						class="fill-current"
+					>
+						<path
+							d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"
+						></path>
+					</svg>
+				</a>
+			</div>
+		</div>
+
+		<!-- Recent Posts Section -->
+		<div class="mb-12">
+			<h2
+				class="text-lg font-medium mb-8 text-gray-500 uppercase tracking-wider"
 			>
-		</li>
-		<li>
-			Add your name to the footer in <code
-				>src/components/Footer.astro</code
-			>
-		</li>
-		<li>
-			Check out the included blog posts in <code>src/content/blog/</code>
-		</li>
-		<li>
-			Customize the blog post page layout in <code
-				>src/layouts/BlogPost.astro</code
-			>
-		</li>
-	</ul>
-	<p>
-		Have fun! If you get stuck, remember to
-		<a href="https://docs.astro.build/">read the docs</a>
-		or <a href="https://astro.build/chat">join us on Discord</a> to ask questions.
-	</p>
-	<p>
-		Looking for a blog template with a bit more personality? Check out
-		<a href="https://github.com/Charca/astro-blog-template"
-			>astro-blog-template</a
-		>
-		by <a href="https://twitter.com/Charca">Maxi Ferreira</a>.
-	</p>
+				Recent Writing
+			</h2>
+			<ul class="space-y-6">
+				{
+					recentPosts.map((post) => (
+						<li class="post-item">
+							<a href={`/blog/${post.id}/`} class="block">
+								<div class="flex items-baseline">
+									<span class="font-medium text-gray-900 hover:text-indigo-500 transition-colors">
+										{post.data.title}
+									</span>
+									<span class="ml-2 text-xs text-gray-400">
+										<FormattedDate
+											date={post.data.pubDate}
+										/>
+									</span>
+								</div>
+								<div class="hidden post-description">
+									<div class="pt-3 pb-1 text-sm text-gray-600">
+										<p>{post.data.description}</p>
+									</div>
+								</div>
+							</a>
+						</li>
+					))
+				}
+			</ul>
+			<div class="mt-8">
+				<a
+					href="/blog"
+					class="text-sm text-gray-500 hover:text-indigo-500 transition-colors"
+				>
+					→ all posts
+				</a>
+			</div>
+		</div>
+	</div>
 </Layout>
+
+<script>
+	// Simple hover effect to show/hide post descriptions
+	document.addEventListener("DOMContentLoaded", () => {
+		const postItems = document.querySelectorAll(".post-item");
+
+		postItems.forEach((item) => {
+			const description = item.querySelector(
+				".post-description",
+			) as HTMLElement | null;
+			let timeout: ReturnType<typeof setTimeout>;
+
+			if (description) {
+				// Show description on mouseenter
+				item.addEventListener("mouseenter", () => {
+					clearTimeout(timeout);
+					// Hide all other descriptions first
+					document
+						.querySelectorAll(".post-description")
+						.forEach((desc) => {
+							if (desc !== description) {
+								desc.classList.add("hidden");
+							}
+						});
+
+					// Show this description with a nice fade-in
+					description.classList.remove("hidden");
+					description.style.opacity = "0";
+					description.style.maxHeight = "0";
+
+					// Force reflow
+					void description.offsetWidth;
+
+					// Animate in
+					description.style.transition =
+						"opacity 500ms ease, max-height 500ms ease";
+					description.style.opacity = "1";
+					description.style.maxHeight = "9rem";
+				});
+
+				// Hide description on mouseleave with delay
+				item.addEventListener("mouseleave", () => {
+					timeout = setTimeout(() => {
+						if (description) {
+							description.style.opacity = "0";
+							description.style.maxHeight = "0";
+
+							// Hide after animation completes
+							setTimeout(() => {
+								description.classList.add("hidden");
+							}, 500);
+						}
+					}, 300); // 300ms delay before starting to hide
+				});
+			}
+		});
+	});
+</script>
+
+<style>
+	.post-item {
+		border-bottom: 1px solid rgba(229, 231, 235, 0.5);
+		padding-bottom: 0.75rem;
+		cursor: pointer;
+	}
+
+	.post-item:last-child {
+		border-bottom: none;
+	}
+</style>
