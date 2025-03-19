@@ -1,0 +1,40 @@
+---
+import DefaultLayout from "../layouts/DefaultLayout.astro";
+import IssView from "../components/iss-view";
+import IssViewClient from "../components/iss-view-client";
+---
+
+<DefaultLayout>
+    <div class="iss-page">
+        <IssView />
+        <div id="iss-client-container">
+            <IssViewClient client:only="react" />
+        </div>
+    </div>
+</DefaultLayout>
+
+<style>
+    .iss-page {
+        padding: 1rem;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    /* Hide server-rendered placeholder once client component loads */
+    :global(.react-loaded #iss-client-container .iss-container) {
+        display: block;
+    }
+
+    :global(.react-loaded > .iss-container) {
+        display: none;
+    }
+</style>
+
+<script>
+    // Mark when client-side React has loaded
+    document.addEventListener("DOMContentLoaded", () => {
+        setTimeout(() => {
+            document.documentElement.classList.add("react-loaded");
+        }, 100);
+    });
+</script>
