@@ -65,8 +65,8 @@ import { SITE_TITLE } from "../consts";
 						</svg>
 					</button>
 					<div
-						class="dropdown-menu absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50"
-						style="max-width: calc(100vw - 16px);"
+						class="dropdown-menu absolute mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50"
+						style="max-width: min(12rem, calc(100vw - 2rem));"
 					>
 						<div
 							class="py-1"
@@ -75,12 +75,12 @@ import { SITE_TITLE } from "../consts";
 						>
 							<a
 								href="/lists"
-								class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-500"
+								class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-500 whitespace-normal break-words"
 								role="menuitem">Lists</a
 							>
 							<a
 								href="/iss"
-								class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-500"
+								class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-500 whitespace-normal break-words"
 								role="menuitem">ISS Tracker</a
 							>
 						</div>
@@ -173,9 +173,24 @@ import { SITE_TITLE } from "../consts";
 	}
 
 	/* Dropdown positioning for responsive behavior */
-	.dropdown-menu.right-0 {
-		left: auto;
+	.dropdown-menu {
 		right: 0;
+		left: auto;
+		width: auto;
+		box-sizing: border-box;
+	}
+
+	@media (min-width: 480px) {
+		.dropdown-menu {
+			width: 12rem; /* 192px, same as w-48 */
+		}
+	}
+
+	@media (min-width: 768px) {
+		.dropdown-menu {
+			right: auto;
+			left: 0;
+		}
 	}
 
 	/* Hamburger to X animation styles */
@@ -249,53 +264,26 @@ import { SITE_TITLE } from "../consts";
 			"mobile-projects-icon",
 		);
 
-		// Position the dropdown menus correctly based on available space
-		const positionDropdowns = () => {
-			const dropdowns = document.querySelectorAll(".dropdown-menu");
-			dropdowns.forEach((dropdown) => {
-				const rect = dropdown.getBoundingClientRect();
-				const parent = dropdown.parentElement;
+		// Simple check to ensure dropdown is within viewport when its parent is near the edge
+		// We only need this as a fallback for edge cases
+		const dropdowns = document.querySelectorAll(".dropdown-menu");
+		dropdowns.forEach((dropdown) => {
+			const parent = dropdown.parentElement;
+			if (parent) {
+				// Watch for hover to check positioning
+				parent.addEventListener("mouseenter", () => {
+					const dropdownRect = dropdown.getBoundingClientRect();
+					const viewportWidth = window.innerWidth;
 
-				// Only reposition if it doesn't already have a positioning class or if it's not visible yet
-				if (!dropdown.classList.contains("positioned")) {
-					// Check if dropdown would extend beyond the viewport width
-					if (parent && rect.right > window.innerWidth) {
-						dropdown.classList.add("right-0");
-						dropdown.classList.remove("left-0");
-					} else {
-						dropdown.classList.add("left-0");
-						dropdown.classList.remove("right-0");
+					// If dropdown extends beyond right edge, force right alignment
+					if (dropdownRect.right > viewportWidth - 10) {
+						// Type assertion to HTMLElement
+						const dropdownElement = dropdown as HTMLElement;
+						dropdownElement.style.left = "auto";
+						dropdownElement.style.right = "0";
 					}
-					// Mark as positioned so we don't keep repositioning it while hovering links
-					dropdown.classList.add("positioned");
-				}
-			});
-		};
-
-		// Position dropdowns on load and resize
-		positionDropdowns();
-		window.addEventListener("resize", () => {
-			// Remove positioned class on resize so we can recalculate
-			document.querySelectorAll(".dropdown-menu").forEach((dropdown) => {
-				dropdown.classList.remove("positioned");
-			});
-			positionDropdowns();
-		});
-
-		// Reposition dropdowns when they become visible
-		document.querySelectorAll(".group").forEach((group) => {
-			group.addEventListener("mouseenter", () => {
-				// Small timeout to ensure the dropdown is visible for getBoundingClientRect
-				setTimeout(positionDropdowns, 10);
-			});
-
-			// Remove the positioned class when mouse leaves the dropdown area
-			group.addEventListener("mouseleave", () => {
-				const dropdown = group.querySelector(".dropdown-menu");
-				if (dropdown) {
-					dropdown.classList.remove("positioned");
-				}
-			});
+				});
+			}
 		});
 
 		if (mobileMenuButton && mobileMenu && mobileMenuLinks) {
