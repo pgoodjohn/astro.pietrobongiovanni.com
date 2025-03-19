@@ -1,0 +1,11 @@
+# robots.txt for pietrobongiovanni.com
+
+User-agent: *
+Allow: /
+
+# Allow Google Images to crawl images
+User-agent: Googlebot-Image
+Allow: /images/
+
+# Allow all bots to crawl sitemaps
+Sitemap: https://pietrobongiovanni.com/sitemap-index.xml 

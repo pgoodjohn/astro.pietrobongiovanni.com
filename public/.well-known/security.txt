@@ -1,0 +1,8 @@
+# Security Policy for pietrobongiovanni.com
+Contact: mailto:info@pietrobongiovanni.com
+Expires: 2026-03-19T00:00:00.000Z
+Preferred-Languages: en
+Canonical: https://pietrobongiovanni.com/.well-known/security.txt
+Policy: https://pietrobongiovanni.com/security-policy
+# This security.txt file follows RFC 9116
+# Last updated: 2025-03-19 
