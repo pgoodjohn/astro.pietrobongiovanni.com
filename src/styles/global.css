@@ -22,6 +22,19 @@ html {
 	scroll-behavior: smooth;
 }
 
+/* Hide scrollbars but keep functionality */
+* {
+	-ms-overflow-style: none;
+	/* Internet Explorer and Edge */
+	scrollbar-width: none;
+	/* Firefox */
+}
+
+*::-webkit-scrollbar {
+	display: none;
+	/* Chrome, Safari, and Opera */
+}
+
 body {
 	font-family: var(--font-sans);
 	margin: 0;

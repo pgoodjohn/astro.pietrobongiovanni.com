@@ -5,7 +5,7 @@ export const SITE_TITLE = 'Pietro Bongiovanni';
 export const SITE_DESCRIPTION = 'Professional Nerd 🤓';
 
 // Social media links
-export const TWITTER_URL = 'https://twitter.com/pgoodjohn';
+export const TWITTER_URL = 'https://twitter.com/pietrogoodjohn';
 export const GITHUB_URL = 'https://github.com/pgoodjohn';
 export const LINKEDIN_URL = 'https://linkedin.com/in/pietrobongiovanni';
 
