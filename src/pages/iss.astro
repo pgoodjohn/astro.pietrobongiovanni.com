@@ -1,22 +1,20 @@
 ---
 import DefaultLayout from "../layouts/DefaultLayout.astro";
-import IssView from "../components/iss-view";
-import IssViewClient from "../components/iss-view-client";
+import IssView from "../components/iss-view/index.tsx";
 ---
 
 <DefaultLayout>
     <div class="iss-page">
-        <IssView />
         <div id="iss-client-container">
-            <IssViewClient client:only="react" />
+            <IssView client:only="react" />
         </div>
     </div>
 </DefaultLayout>
 
 <style>
     .iss-page {
-        padding: 1rem;
-        max-width: 1200px;
+        padding: 0;
+        max-width: 100%;
         margin: 0 auto;
     }
 
