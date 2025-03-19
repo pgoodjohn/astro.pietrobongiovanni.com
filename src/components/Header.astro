@@ -65,7 +65,8 @@ import { SITE_TITLE } from "../consts";
 						</svg>
 					</button>
 					<div
-						class="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50"
+						class="dropdown-menu absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50"
+						style="max-width: calc(100vw - 16px);"
 					>
 						<div
 							class="py-1"
@@ -171,6 +172,12 @@ import { SITE_TITLE } from "../consts";
 		transform: translateY(0) !important;
 	}
 
+	/* Dropdown positioning for responsive behavior */
+	.dropdown-menu.right-0 {
+		left: auto;
+		right: 0;
+	}
+
 	/* Hamburger to X animation styles */
 	.hamburger-icon {
 		position: relative;
@@ -241,6 +248,55 @@ import { SITE_TITLE } from "../consts";
 		const mobileProjectsIcon = document.getElementById(
 			"mobile-projects-icon",
 		);
+
+		// Position the dropdown menus correctly based on available space
+		const positionDropdowns = () => {
+			const dropdowns = document.querySelectorAll(".dropdown-menu");
+			dropdowns.forEach((dropdown) => {
+				const rect = dropdown.getBoundingClientRect();
+				const parent = dropdown.parentElement;
+
+				// Only reposition if it doesn't already have a positioning class or if it's not visible yet
+				if (!dropdown.classList.contains("positioned")) {
+					// Check if dropdown would extend beyond the viewport width
+					if (parent && rect.right > window.innerWidth) {
+						dropdown.classList.add("right-0");
+						dropdown.classList.remove("left-0");
+					} else {
+						dropdown.classList.add("left-0");
+						dropdown.classList.remove("right-0");
+					}
+					// Mark as positioned so we don't keep repositioning it while hovering links
+					dropdown.classList.add("positioned");
+				}
+			});
+		};
+
+		// Position dropdowns on load and resize
+		positionDropdowns();
+		window.addEventListener("resize", () => {
+			// Remove positioned class on resize so we can recalculate
+			document.querySelectorAll(".dropdown-menu").forEach((dropdown) => {
+				dropdown.classList.remove("positioned");
+			});
+			positionDropdowns();
+		});
+
+		// Reposition dropdowns when they become visible
+		document.querySelectorAll(".group").forEach((group) => {
+			group.addEventListener("mouseenter", () => {
+				// Small timeout to ensure the dropdown is visible for getBoundingClientRect
+				setTimeout(positionDropdowns, 10);
+			});
+
+			// Remove the positioned class when mouse leaves the dropdown area
+			group.addEventListener("mouseleave", () => {
+				const dropdown = group.querySelector(".dropdown-menu");
+				if (dropdown) {
+					dropdown.classList.remove("positioned");
+				}
+			});
+		});
 
 		if (mobileMenuButton && mobileMenu && mobileMenuLinks) {
 			mobileMenuButton.addEventListener("click", () => {
