@@ -128,6 +128,11 @@ export function Scene({ issPositionHistory, userLocation }: {
     const EARTH_RADIUS = 2; // Must match Earth component's sphere radius
     const ISS_ORBIT_HEIGHT = 0.3; // ISS orbits at ~400km (scaled to our model - adjusted for better visibility)
 
+    // Determine if ISS data is loading
+    const isIssLoading = useMemo(() => {
+        return issPositionHistory.length === 0;
+    }, [issPositionHistory]);
+
     // Use the latest ISS position from the history array instead of fetching it again
     const issPos = useMemo(() => {
         if (issPositionHistory.length > 0) {
@@ -170,7 +175,7 @@ export function Scene({ issPositionHistory, userLocation }: {
 
     // Camera control for ISS following
     useFrame(({ camera }) => {
-        if (followingIss && issWorldPosition) {
+        if (followingIss && issWorldPosition && !isIssLoading) {
             // Disable orbit controls when following the ISS
             if (orbitControlsRef.current) {
                 orbitControlsRef.current.enabled = false;
@@ -227,12 +232,38 @@ export function Scene({ issPositionHistory, userLocation }: {
                 {/* Earth, ISS and UserMarker no longer rotate */}
                 <group ref={earthRef}>
                     <Earth />
-                    <ISS position={issWorldPosition} trailPositions={trailPositions} />
+                    {/* Only render ISS if data is loaded */}
+                    {!isIssLoading && <ISS position={issWorldPosition} trailPositions={trailPositions} />}
                     {userWorldPosition && <UserMarker position={userWorldPosition} />}
                 </group>
             </Suspense>
 
-            {/* Follow ISS Button - positioned in top right corner of canvas */}
+            {/* Loading Indicator - centered in canvas */}
+            <Html fullscreen>
+                {isIssLoading && (
+                    <div style={{
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        zIndex: 100,
+                        padding: '1rem',
+                        background: 'rgba(30, 30, 30, 0.7)',
+                        borderRadius: '8px',
+                        color: 'white',
+                        textAlign: 'center',
+                        backdropFilter: 'blur(4px)',
+                        boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+                    }}>
+                        <div className="flex flex-col items-center">
+                            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500 mb-2"></div>
+                            <div className="text-lg font-medium">Loading ISS location...</div>
+                        </div>
+                    </div>
+                )}
+            </Html>
+
+            {/* Follow ISS Button - positioned in top right corner of canvas, only show when ISS is loaded */}
             <Html fullscreen>
                 <div style={{
                     position: 'absolute',
@@ -240,24 +271,26 @@ export function Scene({ issPositionHistory, userLocation }: {
                     right: '20px',
                     zIndex: 100
                 }}>
-                    <button
-                        onClick={toggleIssFollow}
-                        className={`px-4 py-2 rounded-full shadow-lg transition-all duration-300 ${followingIss
-                            ? 'bg-indigo-600 text-white hover:bg-indigo-700'
-                            : 'bg-white text-indigo-600 hover:bg-gray-100'
-                            }`}
-                        style={{
-                            fontFamily: 'sans-serif',
-                            fontSize: '14px',
-                            border: 'none',
-                            outline: 'none',
-                            cursor: 'pointer',
-                            boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-                            whiteSpace: 'nowrap'
-                        }}
-                    >
-                        {followingIss ? 'Exit ISS View' : 'Focus on ISS'}
-                    </button>
+                    {!isIssLoading && (
+                        <button
+                            onClick={toggleIssFollow}
+                            className={`px-4 py-2 rounded-full shadow-lg transition-all duration-300 ${followingIss
+                                ? 'bg-indigo-600 text-white hover:bg-indigo-700'
+                                : 'bg-white text-indigo-600 hover:bg-gray-100'
+                                }`}
+                            style={{
+                                fontFamily: 'sans-serif',
+                                fontSize: '14px',
+                                border: 'none',
+                                outline: 'none',
+                                cursor: 'pointer',
+                                boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+                                whiteSpace: 'nowrap'
+                            }}
+                        >
+                            {followingIss ? 'Exit ISS View' : 'Focus on ISS'}
+                        </button>
+                    )}
                 </div>
             </Html>
         </>
