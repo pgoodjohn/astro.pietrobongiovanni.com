@@ -18,32 +18,33 @@ interface UserLocation {
     isLoading: boolean;
 }
 
-// Interface for IP Geolocation API response
-interface IpGeoResponse {
-    status: string;
-    country: string;
-    countryCode: string;
-    region: string;
-    regionName: string;
-    city: string;
-    zip: string;
-    lat: number;
-    lon: number;
-    timezone: string;
-    isp: string;
-    org: string;
-    as: string;
-    query: string; // This is the user's IP address
+// Interface for IP API response from ipify.org
+interface IpifyResponse {
+    ip: string;
 }
 
-// Interface for ISS API response
+// Interface for Geolocation API response from ipapi.co
+interface IpapiResponse {
+    ip: string;
+    city: string;
+    region: string;
+    country_name: string;
+    country: string;
+    latitude: number;
+    longitude: number;
+    timezone: string;
+    error?: string;
+}
+
+// Interface for ISS API response from wheretheiss.at
 interface IssApiResponse {
-    message: string;
+    latitude: number;
+    longitude: number;
+    altitude: number;
+    velocity: number;
+    visibility: string;
     timestamp: number;
-    iss_position: {
-        latitude: string;
-        longitude: string;
-    }
+    name: string;
 }
 
 // The main client component
@@ -67,20 +68,24 @@ export default function IssViewClient() {
         const fetchUserLocation = async () => {
             try {
                 // Using IP-API.com for geolocation based on IP
-                const response = await fetch('http://ip-api.com/json/');
-                const data: IpGeoResponse = await response.json();
+                const response = await fetch('https://api.ipify.org?format=json');
+                const ipData = await response.json();
 
-                if (data.status === 'success') {
+                // Get location data from IP
+                const geoResponse = await fetch(`https://ipapi.co/${ipData.ip}/json/`);
+                const data = await geoResponse.json();
+
+                if (data.error === undefined) {
                     setUserLocation({
-                        latitude: data.lat,
-                        longitude: data.lon,
-                        country: data.country,
+                        latitude: data.latitude,
+                        longitude: data.longitude,
+                        country: data.country_name,
                         city: data.city,
                         isLoading: false
                     });
                     // Store the user IP
-                    setUserIp(data.query);
-                    console.log(`User location detected: ${data.city}, ${data.country}`);
+                    setUserIp(ipData.ip);
+                    console.log(`User location detected: ${data.city}, ${data.country_name}`);
                 } else {
                     // If the API fails, mark as not loading but keep default coords
                     setUserLocation(prev => ({
@@ -105,13 +110,13 @@ export default function IssViewClient() {
     useEffect(() => {
         const fetchIssPosition = async () => {
             try {
-                const response = await fetch('http://api.open-notify.org/iss-now.json');
-                const data: IssApiResponse = await response.json();
+                const response = await fetch('https://api.wheretheiss.at/v1/satellites/25544');
+                const data = await response.json();
 
-                if (data.message === "success") {
+                if (data.latitude && data.longitude) {
                     const newPosition = {
-                        latitude: parseFloat(data.iss_position.latitude),
-                        longitude: parseFloat(data.iss_position.longitude),
+                        latitude: data.latitude,
+                        longitude: data.longitude,
                         timestamp: Date.now()
                     };
 

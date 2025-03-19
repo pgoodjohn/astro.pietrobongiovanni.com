@@ -41,7 +41,7 @@ export function IssLocationCard({
                 Last updated: {lastFetchedTime}
             </div>
             <div className="font-mono text-xs text-gray-500 mt-2">
-                Data provided by: <a href="http://api.open-notify.org/" target="_blank" rel="noopener noreferrer" className="text-indigo-500 hover:underline">Open Notify API</a>
+                Data provided by: <a href="https://wheretheiss.at/" target="_blank" rel="noopener noreferrer" className="text-indigo-500 hover:underline">WhereTheISS.at API</a>
             </div>
         </div>
     );
@@ -69,7 +69,7 @@ export function UserLocationCard({ userLocation, userIp }: { userLocation: UserL
                 </div>
             )}
             <div className="font-mono text-xs text-gray-500 mt-2">
-                Location data provided by: <a href="https://ip-api.com/" target="_blank" rel="noopener noreferrer" className="text-indigo-500 hover:underline">IP-API.com</a>
+                Location data provided by: <a href="https://ipapi.co/" target="_blank" rel="noopener noreferrer" className="text-indigo-500 hover:underline">ipapi.co</a>
             </div>
         </div>
     );
