@@ -1,0 +1,150 @@
+# Project Documentation
+
+## Overview
+This is a static website built with [Astro](https://astro.build/), styled with Tailwind CSS, and served through Nginx. The site prioritizes simplicity, performance, and maintainability while allowing for dynamic components when necessary.
+
+## Technology Stack
+- **Framework**: Astro
+- **Styling**: Tailwind CSS
+- **Server**: Nginx
+- **Additional Libraries**: React (for specific interactive components)
+
+## Project Structure
+```
+astro.pietrobongiovanni.com/
+├── src/
+│   ├── components/     # Astro and React components
+│   ├── layouts/        # Page layouts
+│   ├── pages/         # Route pages
+│   └── styles/        # Global styles (if any)
+├── public/            # Static assets
+└── nginx/            # Nginx configuration
+```
+
+## Development Guidelines
+
+### Component Development
+1. **Default to Astro Components**
+   - Use `.astro` components for most UI elements
+   - Keep components simple and HTML-focused
+   - Utilize Tailwind CSS for styling
+
+2. **When to Use React**
+   - Only use React for components that require complex interactivity
+   - Examples of appropriate React usage:
+     - ISS Tracker
+     - Interactive data visualizations
+     - Complex state management needs
+
+3. **Styling Best Practices**
+   - Use Tailwind CSS classes whenever possible
+   - Avoid custom CSS unless absolutely necessary
+   - Maintain consistent spacing and responsive design patterns
+
+### Deployment and Infrastructure
+
+#### Static Site Generation
+- The site is built as a fully static website
+- All pages are pre-rendered at build time
+- No server-side rendering or API routes
+
+#### Nginx Configuration
+- Configuration file location: `/nginx/nginx.conf`
+- **Important**: Nginx configuration is managed manually on the server
+- Key features enabled:
+  - HTTPS with Let's Encrypt certificates
+  - Gzip compression
+  - Static asset caching
+  - Custom error pages
+  - HTTP to HTTPS redirection
+
+#### Nginx Configuration Management
+1. Changes to nginx.conf must be made directly on the server
+2. After changes, validate the configuration:
+   ```bash
+   sudo nginx -t
+   ```
+3. Reload Nginx to apply changes:
+   ```bash
+   sudo systemctl reload nginx
+   ```
+
+### Performance Considerations
+1. **Image Optimization**
+   - Use Astro's built-in image optimization
+   - Properly size and compress images before adding to the project
+
+2. **JavaScript Usage**
+   - Minimize client-side JavaScript
+   - Use Astro's partial hydration when possible
+   - Only hydrate interactive components that need it
+
+3. **Asset Management**
+   - Leverage Nginx's caching configuration for static assets
+   - Use appropriate cache headers for different types of content
+
+## Best Practices
+
+### Adding New Features
+1. Start with an Astro component unless you need React
+2. Use Tailwind CSS for styling
+3. Keep components small and focused
+4. Document any complex logic or configurations
+
+### Code Organization
+1. Group related components together
+2. Keep pages simple, move complex logic to components
+3. Use clear, descriptive names for files and components
+
+### Maintenance
+1. Regularly update dependencies
+2. Monitor Nginx logs for issues
+3. Keep documentation updated with new features or changes
+4. Test thoroughly before deploying to production
+
+## Common Tasks
+
+### Adding a New Page
+1. Create a new `.astro` file in the `pages` directory
+2. Use existing layouts when appropriate
+3. Add necessary meta tags for SEO
+4. Update navigation if required
+
+### Modifying Nginx Configuration
+1. SSH into the production server
+2. Edit the Nginx configuration file
+3. Test the configuration
+4. Reload Nginx
+
+### Adding Interactive Features
+1. Evaluate if the feature requires React
+2. If not, use Astro components with client directives
+3. If React is needed, create a new component in the appropriate directory
+4. Import and use the React component with proper hydration directives
+
+## Troubleshooting
+
+### Common Issues
+1. **404 Errors**
+   - Check Nginx configuration
+   - Verify file paths in the build output
+   - Ensure proper routing in Astro
+
+2. **Style Issues**
+   - Confirm Tailwind classes are correct
+   - Check for conflicting styles
+   - Verify build process includes all CSS
+
+3. **Performance Problems**
+   - Review network waterfall
+   - Check image optimization
+   - Verify caching headers
+   - Monitor JavaScript bundle size
+
+## Getting Help
+- Refer to [Astro Documentation](https://docs.astro.build/)
+- Check [Tailwind CSS Documentation](https://tailwindcss.com/docs)
+- Review [Nginx Documentation](https://nginx.org/en/docs/)
+- Search for issues in the project repository
+
+Remember: Keep it simple, prioritize performance, and only add complexity when necessary. 
