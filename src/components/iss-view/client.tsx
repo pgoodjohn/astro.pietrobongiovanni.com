@@ -219,12 +219,14 @@ export default function IssViewClient() {
 
     return (
         <div className="w-full pb-8">
-            <h1 className="text-4xl md:text-5xl font-bold text-center mb-6 text-transparent bg-clip-text bg-gradient-to-r from-indigo-700 to-indigo-400">
-                Track the International Space Station
-            </h1>
+            <div className="container mx-auto px-4 py-4">
+                <h1 className="text-2xl font-mono text-indigo-500 mb-6">
+                    ISS Tracker
+                </h1>
+            </div>
 
             {isCanvasSupported ? (
-                <div className="w-full max-w-none h-[calc(65vh-50px)] min-h-[600px] bg-black rounded-xl overflow-hidden shadow-2xl relative my-6">
+                <div className="container mx-auto h-[calc(65vh-50px)] min-h-[600px] bg-black overflow-hidden relative my-6">
                     {isTextureLoading && (
                         <div className="absolute inset-0 flex items-center justify-center bg-black/70 text-white z-10">
                             <div>
