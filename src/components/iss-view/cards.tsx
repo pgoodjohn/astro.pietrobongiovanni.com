@@ -32,15 +32,15 @@ export function IssLocationCard({
 }) {
     return (
         <div className="bg-white/5 border border-gray-200/10 rounded-lg p-4 backdrop-blur-sm">
-            <div className="text-base font-medium text-gray-800 mb-2">ISS Location</div>
+            <div className="font-mono text-base font-medium text-gray-800 mb-2">ISS Location</div>
             <div className="font-mono text-base text-gray-700">
                 Lat: {formatCoordinate(issPosition.latitude, true)},
                 Long: {formatCoordinate(issPosition.longitude, false)}
             </div>
-            <div className="text-xs text-gray-500 mt-2 italic">
+            <div className="font-mono text-xs text-gray-500 mt-2 italic">
                 Last updated: {lastFetchedTime}
             </div>
-            <div className="text-xs text-gray-500 mt-2">
+            <div className="font-mono text-xs text-gray-500 mt-2">
                 Data provided by: <a href="http://api.open-notify.org/" target="_blank" rel="noopener noreferrer" className="text-indigo-500 hover:underline">Open Notify API</a>
             </div>
         </div>
@@ -51,7 +51,7 @@ export function IssLocationCard({
 export function UserLocationCard({ userLocation, userIp }: { userLocation: UserLocation; userIp: string }) {
     return (
         <div className="bg-white/5 border border-gray-200/10 rounded-lg p-4 backdrop-blur-sm">
-            <div className="text-base font-medium text-gray-800 mb-2">Your Location</div>
+            <div className="font-mono text-base font-medium text-gray-800 mb-2">Your Location</div>
             {userLocation.isLoading ? (
                 <div className="font-mono text-base text-gray-700">Detecting your location...</div>
             ) : (
@@ -68,7 +68,7 @@ export function UserLocationCard({ userLocation, userIp }: { userLocation: UserL
                     )}
                 </div>
             )}
-            <div className="text-xs text-gray-500 mt-2">
+            <div className="font-mono text-xs text-gray-500 mt-2">
                 Location data provided by: <a href="https://ip-api.com/" target="_blank" rel="noopener noreferrer" className="text-indigo-500 hover:underline">IP-API.com</a>
             </div>
         </div>
@@ -85,7 +85,7 @@ export function DevelopmentTrackingCard({
 }) {
     return (
         <div className="bg-white/5 border border-gray-200/10 rounded-lg p-4 backdrop-blur-sm">
-            <div className="text-base font-medium text-gray-800 mb-2">Tracking Data (Development Only)</div>
+            <div className="font-mono text-base font-medium text-gray-800 mb-2">Tracking Data (Development Only)</div>
             <div className="font-mono text-base text-gray-700">
                 <div>Trail Points: {issPositionHistory.length}</div>
                 <div>Tracking Time: {getTrackingDuration()}</div>

@@ -88,6 +88,45 @@ export function OrbitalTrail({ positions }: { positions: THREE.Vector3[] }) {
     );
 }
 
+// Line that connects ISS to the Earth's surface
+export function SurfaceVerticalLine({ issPosition, earthRadius }: { issPosition: THREE.Vector3, earthRadius: number }) {
+    const lineRef = useRef<THREE.Line>(null);
+
+    // Create the same material as the orbital trail for visual consistency
+    const lineMaterial = useMemo(() => {
+        return new THREE.LineBasicMaterial({
+            color: '#4a9bff',
+            transparent: true,
+            opacity: 0.8,
+            linewidth: 2,
+            depthTest: true
+        });
+    }, []);
+
+    // Create the surface position (same lat/long but at Earth's radius)
+    const surfacePosition = useMemo(() => {
+        // Calculate the normalized direction from center to ISS
+        const direction = issPosition.clone().normalize();
+        // Scale to the Earth's radius to get the surface point
+        return direction.multiplyScalar(earthRadius);
+    }, [issPosition, earthRadius]);
+
+    // Create array with just two points: ISS position and surface position
+    const linePositions = useMemo(() => {
+        return [issPosition, surfacePosition];
+    }, [issPosition, surfacePosition]);
+
+    return (
+        <primitive
+            object={new THREE.Line(
+                new THREE.BufferGeometry().setFromPoints(linePositions),
+                lineMaterial
+            )}
+            ref={lineRef}
+        />
+    );
+}
+
 // ISS Model component
 export function ISS({ position, trailPositions = [] }: { position: THREE.Vector3, trailPositions?: THREE.Vector3[] }) {
     const issRef = useRef<THREE.Group>(null);
@@ -109,6 +148,15 @@ export function ISS({ position, trailPositions = [] }: { position: THREE.Vector3
         }
         return trailPositions;
     }, [trailPositions]);
+
+    // Get the Earth radius from the position magnitude (we know position is at EARTH_RADIUS + orbit height)
+    const earthRadius = useMemo(() => {
+        // Calculate the approximate Earth radius from the position
+        // The ISS orbit is about 400km above Earth, which in our scaled model is 0.3 units
+        // So we can subtract that from the position magnitude
+        const positionMagnitude = safePosition.length();
+        return positionMagnitude - 0.3; // Subtracting the orbit height
+    }, [safePosition]);
 
     useFrame(() => {
         if (issRef.current) {
@@ -142,6 +190,9 @@ export function ISS({ position, trailPositions = [] }: { position: THREE.Vector3
         <>
             {/* Add the orbital trail using the history of positions */}
             <OrbitalTrail positions={safeTrailPositions} />
+
+            {/* Add the vertical line from ISS to Earth's surface */}
+            <SurfaceVerticalLine issPosition={safePosition} earthRadius={earthRadius} />
 
             <group ref={issRef} position={safePosition} scale={[0.15, 0.15, 0.15]}>
                 {/* Main Habitation Module */}
