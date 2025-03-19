@@ -18,35 +18,6 @@ interface UserLocation {
     isLoading: boolean;
 }
 
-// Interface for IP API response from ipify.org
-interface IpifyResponse {
-    ip: string;
-}
-
-// Interface for Geolocation API response from ipapi.co
-interface IpapiResponse {
-    ip: string;
-    city: string;
-    region: string;
-    country_name: string;
-    country: string;
-    latitude: number;
-    longitude: number;
-    timezone: string;
-    error?: string;
-}
-
-// Interface for ISS API response from wheretheiss.at
-interface IssApiResponse {
-    latitude: number;
-    longitude: number;
-    altitude: number;
-    velocity: number;
-    visibility: string;
-    timestamp: number;
-    name: string;
-}
-
 // The main client component
 export default function IssViewClient() {
     const [currentIssPos, setCurrentIssPos] = useState<IssPosition>({ latitude: 40, longitude: -75 });
@@ -267,7 +238,7 @@ export default function IssViewClient() {
                     </Canvas>
 
                     <div className="absolute bottom-3 right-3 bg-black/50 text-white px-3 py-1.5 rounded text-xs">
-                        Rotate: Drag | Zoom: Scroll
+                        Rotate: Drag | Zoom: {isMobile ? "Pinch" : "Scroll"}
                     </div>
                 </div>
             ) : (
