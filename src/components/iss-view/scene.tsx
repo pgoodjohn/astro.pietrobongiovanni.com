@@ -1,7 +1,7 @@
 import React, { useRef, useState, Suspense, useMemo, useEffect } from "react";
 import * as THREE from "three";
 import { useFrame, useThree, useLoader } from "@react-three/fiber";
-import { OrbitControls, Stars, PerspectiveCamera } from "@react-three/drei";
+import { OrbitControls, Stars, PerspectiveCamera, Html } from "@react-three/drei";
 import { EffectComposer, Bloom, Vignette } from "@react-three/postprocessing";
 import { ISS, UserMarker, latLongToVector3 } from "./markers";
 
@@ -120,6 +120,9 @@ export function Scene({ issPositionHistory, userLocation }: {
     userLocation: UserLocation
 }) {
     const earthRef = useRef<THREE.Group>(null);
+    const orbitControlsRef = useRef<any>(null);
+    const cameraRef = useRef<THREE.PerspectiveCamera>(null);
+    const [followingIss, setFollowingIss] = useState<boolean>(false);
 
     // Calculate world positions from lat/long coordinates
     const EARTH_RADIUS = 2; // Must match Earth component's sphere radius
@@ -160,6 +163,34 @@ export function Scene({ issPositionHistory, userLocation }: {
         );
     }, [issPositionHistory]);
 
+    // Toggle ISS following mode
+    const toggleIssFollow = () => {
+        setFollowingIss(!followingIss);
+    };
+
+    // Camera control for ISS following
+    useFrame(({ camera }) => {
+        if (followingIss && issWorldPosition) {
+            // Disable orbit controls when following the ISS
+            if (orbitControlsRef.current) {
+                orbitControlsRef.current.enabled = false;
+            }
+
+            // Calculate camera target position - slightly offset from ISS for better viewing angle
+            const offset = issWorldPosition.clone().normalize().multiplyScalar(2);
+            const targetPosition = issWorldPosition.clone().add(offset);
+
+            // Smoothly interpolate camera position
+            camera.position.lerp(targetPosition, 0.05);
+
+            // Look at the ISS
+            camera.lookAt(issWorldPosition);
+        } else if (orbitControlsRef.current) {
+            // Re-enable orbit controls when not following
+            orbitControlsRef.current.enabled = true;
+        }
+    });
+
     return (
         <>
             {/* Increased ambient light for overall brightness */}
@@ -180,8 +211,9 @@ export function Scene({ issPositionHistory, userLocation }: {
                 position={[-5, -1, -5]}
             />
 
-            <PerspectiveCamera makeDefault position={[0, 0, 10]} />
+            <PerspectiveCamera ref={cameraRef} makeDefault position={[0, 0, 10]} />
             <OrbitControls
+                ref={orbitControlsRef}
                 enablePan={false}
                 minDistance={3}
                 maxDistance={25}
@@ -199,6 +231,35 @@ export function Scene({ issPositionHistory, userLocation }: {
                     {userWorldPosition && <UserMarker position={userWorldPosition} />}
                 </group>
             </Suspense>
+
+            {/* Follow ISS Button - positioned in top right corner of canvas */}
+            <Html fullscreen>
+                <div style={{
+                    position: 'absolute',
+                    top: '20px',
+                    right: '20px',
+                    zIndex: 100
+                }}>
+                    <button
+                        onClick={toggleIssFollow}
+                        className={`px-4 py-2 rounded-full shadow-lg transition-all duration-300 ${followingIss
+                            ? 'bg-indigo-600 text-white hover:bg-indigo-700'
+                            : 'bg-white text-indigo-600 hover:bg-gray-100'
+                            }`}
+                        style={{
+                            fontFamily: 'sans-serif',
+                            fontSize: '14px',
+                            border: 'none',
+                            outline: 'none',
+                            cursor: 'pointer',
+                            boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+                            whiteSpace: 'nowrap'
+                        }}
+                    >
+                        {followingIss ? 'Exit ISS View' : 'Focus on ISS'}
+                    </button>
+                </div>
+            </Html>
         </>
     );
 } 
