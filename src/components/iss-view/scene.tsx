@@ -25,11 +25,11 @@ export function Earth({ children }: { children?: React.ReactNode }) {
     const [isLoaded, setIsLoaded] = useState(false);
     const { gl } = useThree();
 
-    // Use the correct version of textures from three-globe
-    const earthDayMap = useLoader(THREE.TextureLoader, 'https://unpkg.com/three-globe@2.42.2/example/img/earth-blue-marble.jpg');
-    const earthNightMap = useLoader(THREE.TextureLoader, 'https://unpkg.com/three-globe@2.42.2/example/img/earth-night.jpg');
-    const earthTopologyMap = useLoader(THREE.TextureLoader, 'https://unpkg.com/three-globe@2.42.2/example/img/earth-topology.png');
-    const earthWaterMap = useLoader(THREE.TextureLoader, 'https://unpkg.com/three-globe@2.42.2/example/img/earth-water.png');
+    // Use textures from our public directory
+    const earthDayMap = useLoader(THREE.TextureLoader, '/assets/earth-textures/earth-blue-marble.jpg');
+    const earthNightMap = useLoader(THREE.TextureLoader, '/assets/earth-textures/earth-night.jpg');
+    const earthTopologyMap = useLoader(THREE.TextureLoader, '/assets/earth-textures/earth-topology.png');
+    const earthWaterMap = useLoader(THREE.TextureLoader, '/assets/earth-textures/earth-water.png');
 
     useEffect(() => {
         if (earthDayMap && earthNightMap && earthTopologyMap && earthWaterMap) {
