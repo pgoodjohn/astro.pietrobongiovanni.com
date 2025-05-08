@@ -5,14 +5,14 @@ import FormattedDate from "../components/FormattedDate.astro";
 import LastCommit from "../components/LastCommit.astro";
 import { TWITTER_URL, GITHUB_URL } from "../consts";
 
-// Get the 3 most recent blog posts
+// Get the 1 most recent blog posts
 const recentPosts = (
 	await getCollection("blog", ({ data }) => {
 		return import.meta.env.PROD ? data.draft !== true : true;
 	})
 )
 	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
-	.slice(0, 3);
+	.slice(0, 1);
 ---
 
 <Layout>
@@ -25,7 +25,7 @@ const recentPosts = (
 
 			<div class="p-4 inline-block mb-6">
 				<p class="text-lg">
-					I like to build things with software<span
+					I like to make things with software<span
 						class="text-indigo-500">.</span
 					>
 				</p>

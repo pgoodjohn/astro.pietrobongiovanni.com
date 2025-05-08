@@ -1,0 +1,38 @@
+---
+interface Props {
+    title: string;
+    description: string;
+    url: string;
+}
+
+const { title, description, url } = Astro.props;
+---
+
+<a href={url} class="group">
+    <div
+        class="p-6 bg-white rounded-lg hover:border-indigo-200 transition-colors"
+    >
+        <div class="flex items-baseline mb-2">
+            <div
+                class="w-0 overflow-hidden group-hover:w-6 transition-all duration-300 flex items-center"
+            >
+                <span class="text-indigo-500 text-xl flex-shrink-0">→</span>
+            </div>
+            <h2
+                class="text-xl font-medium text-gray-800 group-hover:text-indigo-500 transition-colors"
+            >
+                {title}
+            </h2>
+        </div>
+        <p class="text-gray-600">
+            {description}
+        </p>
+    </div>
+</a>
+
+<style>
+    /* Ensure smooth width transition */
+    .w-0.group-hover\:w-6 {
+        min-width: 0;
+    }
+</style>

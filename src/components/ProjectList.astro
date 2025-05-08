@@ -1,0 +1,33 @@
+---
+import ProjectCard from "./ProjectCard.astro";
+
+interface Project {
+    title: string;
+    description: string;
+    url: string;
+}
+
+interface Props {
+    projects: Project[];
+}
+
+const { projects } = Astro.props;
+---
+
+<div class="w-full">
+    <div class="grid">
+        {
+            projects.map((project, index) => (
+                <div
+                    class={`py-6 ${index !== 0 ? "border-t border-gray-300" : ""}`}
+                >
+                    <ProjectCard
+                        title={project.title}
+                        description={project.description}
+                        url={project.url}
+                    />
+                </div>
+            ))
+        }
+    </div>
+</div>

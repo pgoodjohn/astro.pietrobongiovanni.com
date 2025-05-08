@@ -1,0 +1,44 @@
+---
+interface School {
+    name: string;
+    logo: string;
+    url: string;
+}
+
+interface Props {
+    schools: School[];
+}
+
+const { schools } = Astro.props;
+---
+
+<div class="w-full">
+    <div class="flex justify-center space-x-8">
+        {
+            schools.map((school) => (
+                <div class="relative group flex flex-col items-center">
+                    <a
+                        href={school.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="w-16 h-16 flex items-center justify-center transition-all duration-300 hover:opacity-80"
+                        aria-label={school.name}
+                    >
+                        <img
+                            src={school.logo}
+                            alt={`${school.name} logo`}
+                            class="w-12 h-12 object-contain"
+                        />
+                    </a>
+                    <div class="absolute top-full mt-2 left-1/2 transform -translate-x-1/2 w-max rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 pointer-events-none">
+                        <div class="py-2 px-4">
+                            <div class="text-sm text-gray-700 whitespace-nowrap">
+                                {school.name}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            ))
+        }
+    </div>
+</div>

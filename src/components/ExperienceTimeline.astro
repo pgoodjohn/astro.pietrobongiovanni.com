@@ -1,0 +1,109 @@
+---
+interface Props {
+    experiences: {
+        company: string;
+        period: string;
+        description?: string;
+        logo: string;  // URL to the company logo
+        url: string;   // URL to the company website
+    }[];
+}
+
+const { experiences } = Astro.props;
+// Keep the original order to show current experience at the top
+const orderedExperiences = [...experiences];
+---
+
+<div class="w-full mx-auto">
+    {orderedExperiences.map((exp, index) => (
+        <div class={`timeline-item py-6 ${index !== 0 ? 'border-t border-gray-300' : ''}`}>
+            <!-- Header -->
+            <div class="flex items-start space-x-4">
+                <div 
+                    class="w-16 h-16 flex items-center justify-center cursor-pointer transition-all duration-300"
+                    data-expandable
+                >
+                    <img 
+                        src={exp.logo} 
+                        alt={`${exp.company} logo`}
+                        class="w-12 h-12 object-contain"
+                    />
+                </div>
+                <div class="flex-1">
+                    <div class="flex items-baseline gap-2">
+                        <h3 
+                            class="text-lg font-semibold text-gray-800 hover:text-indigo-600 cursor-pointer transition-colors font-mono"
+                            data-expandable
+                        >
+                            {exp.company}
+                        </h3>
+                        <a 
+                            href={exp.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="text-gray-400 hover:text-indigo-500 transition-colors inline-flex items-baseline"
+                            aria-label={`Visit ${exp.company} website`}
+                        >
+                            <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                                <polyline points="15 3 21 3 21 9" />
+                                <line x1="10" y1="14" x2="21" y2="3" />
+                            </svg>
+                        </a>
+                    </div>
+                    <span class="text-sm text-gray-500 block mt-1 font-mono">{exp.period}</span>
+                </div>
+            </div>
+            
+            <!-- Description (expandable) -->
+            <div class="h-0 transition-all duration-300 overflow-hidden">
+                <div class="pl-20 pr-4 mt-3 text-sm text-gray-600 leading-relaxed font-mono">
+                    {exp.description}
+                </div>
+            </div>
+        </div>
+    ))}
+</div>
+
+<script>
+    // Get all timeline items
+    const timelineItems = document.querySelectorAll('.timeline-item');
+    
+    // Function to expand an item and collapse others
+    function expandItem(item: Element) {
+        // Collapse all items
+        timelineItems.forEach((timelineItem) => {
+            const description = timelineItem.querySelector('.h-0') as HTMLElement;
+            if (description) {
+                description.style.height = '0';
+            }
+        });
+        
+        // Expand the clicked item
+        const description = item.querySelector('.h-0') as HTMLElement;
+        if (description) {
+            description.style.height = description.scrollHeight + 'px';
+        }
+    }
+    
+    // Add click event listeners to all expandable elements
+    timelineItems.forEach((item) => {
+        const expandableElements = item.querySelectorAll('[data-expandable]');
+        expandableElements.forEach((element) => {
+            element.addEventListener('click', () => {
+                expandItem(item);
+            });
+        });
+    });
+    
+    // Expand the first item (current experience) by default
+    if (timelineItems.length > 0) {
+        expandItem(timelineItems[0]);
+    }
+</script>
+
+<style>
+    .timeline-item {
+        transition: all 0.3s ease-in-out;
+    }
+</style> 

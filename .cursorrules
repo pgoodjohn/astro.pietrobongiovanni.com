@@ -28,6 +28,7 @@ astro.pietrobongiovanni.com/
    - Use `.astro` components for most UI elements
    - Keep components simple and HTML-focused
    - Utilize Tailwind CSS for styling
+   - Use bun for package management
 
 2. **When to Use React**
    - Only use React for components that require complex interactivity

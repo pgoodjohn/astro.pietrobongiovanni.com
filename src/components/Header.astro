@@ -38,54 +38,10 @@ import { SITE_TITLE } from "../consts";
 					>Home</HeaderLink
 				>
 				<HeaderLink
-					href="/blog"
+					href="/projects"
 					class="text-gray-600 hover:text-indigo-500 transition-colors"
-					>Blog</HeaderLink
+					>Projects</HeaderLink
 				>
-				<!-- Projects dropdown for desktop -->
-				<div class="relative group">
-					<button
-						class="flex items-center space-x-1 text-indigo-500 transition-colors focus:outline-none"
-						aria-expanded="false"
-						aria-haspopup="true"
-					>
-						<span>Projects</span>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							class="h-4 w-4 transition-transform duration-200 text-indigo-500 group-hover:rotate-180"
-							fill="none"
-							viewBox="0 0 24 24"
-							stroke="currentColor"
-						>
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="2"
-								d="M19 9l-7 7-7-7"></path>
-						</svg>
-					</button>
-					<div
-						class="dropdown-menu absolute mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50"
-						style="max-width: min(12rem, calc(100vw - 2rem));"
-					>
-						<div
-							class="py-1"
-							role="menu"
-							aria-orientation="vertical"
-						>
-							<a
-								href="/lists"
-								class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-500 whitespace-normal break-words"
-								role="menuitem">Lists</a
-							>
-							<a
-								href="/iss"
-								class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-500 whitespace-normal break-words"
-								role="menuitem">ISS Tracker</a
-							>
-						</div>
-					</div>
-				</div>
 			</div>
 		</nav>
 
@@ -108,48 +64,11 @@ import { SITE_TITLE } from "../consts";
 					class="text-gray-600 hover:text-indigo-500 transition-colors"
 					>Blog</HeaderLink
 				>
-				<!-- Projects dropdown for mobile -->
-				<div class="relative">
-					<button
-						id="mobile-projects-button"
-						class="flex items-center justify-between w-full text-left text-indigo-500 transition-colors focus:outline-none"
-						aria-expanded="false"
-						aria-haspopup="true"
-					>
-						<span>Projects</span>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							class="h-4 w-4 transition-transform duration-200 text-indigo-500"
-							id="mobile-projects-icon"
-							fill="none"
-							viewBox="0 0 24 24"
-							stroke="currentColor"
-						>
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="2"
-								d="M19 9l-7 7-7-7"></path>
-						</svg>
-					</button>
-					<div
-						id="mobile-projects-dropdown"
-						class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out pl-4"
-					>
-						<div class="pt-2 pb-1 space-y-2">
-							<a
-								href="/lists"
-								class="block text-gray-600 hover:text-indigo-500 transition-colors"
-								>Lists</a
-							>
-							<a
-								href="/iss"
-								class="block text-gray-600 hover:text-indigo-500 transition-colors"
-								>ISS Tracker</a
-							>
-						</div>
-					</div>
-				</div>
+				<HeaderLink
+					href="/projects"
+					class="text-gray-600 hover:text-indigo-500 transition-colors"
+					>Projects</HeaderLink
+				>
 			</div>
 		</div>
 	</div>
@@ -170,27 +89,6 @@ import { SITE_TITLE } from "../consts";
 	.menu-links-visible {
 		opacity: 1 !important;
 		transform: translateY(0) !important;
-	}
-
-	/* Dropdown positioning for responsive behavior */
-	.dropdown-menu {
-		right: 0;
-		left: auto;
-		width: auto;
-		box-sizing: border-box;
-	}
-
-	@media (min-width: 480px) {
-		.dropdown-menu {
-			width: 12rem; /* 192px, same as w-48 */
-		}
-	}
-
-	@media (min-width: 768px) {
-		.dropdown-menu {
-			right: auto;
-			left: 0;
-		}
 	}
 
 	/* Hamburger to X animation styles */
@@ -237,15 +135,6 @@ import { SITE_TITLE } from "../consts";
 		bottom: 50%;
 		transform: translateY(50%) rotate(-45deg);
 	}
-
-	/* Mobile Projects dropdown expanded state */
-	.mobile-dropdown-expanded {
-		max-height: 100px !important;
-	}
-
-	.rotate-icon {
-		transform: rotate(180deg);
-	}
 </style>
 
 <script>
@@ -254,37 +143,6 @@ import { SITE_TITLE } from "../consts";
 		const mobileMenuButton = document.getElementById("mobile-menu-button");
 		const mobileMenu = document.getElementById("mobile-menu");
 		const mobileMenuLinks = document.getElementById("mobile-menu-links");
-		const mobileProjectsButton = document.getElementById(
-			"mobile-projects-button",
-		);
-		const mobileProjectsDropdown = document.getElementById(
-			"mobile-projects-dropdown",
-		);
-		const mobileProjectsIcon = document.getElementById(
-			"mobile-projects-icon",
-		);
-
-		// Simple check to ensure dropdown is within viewport when its parent is near the edge
-		// We only need this as a fallback for edge cases
-		const dropdowns = document.querySelectorAll(".dropdown-menu");
-		dropdowns.forEach((dropdown) => {
-			const parent = dropdown.parentElement;
-			if (parent) {
-				// Watch for hover to check positioning
-				parent.addEventListener("mouseenter", () => {
-					const dropdownRect = dropdown.getBoundingClientRect();
-					const viewportWidth = window.innerWidth;
-
-					// If dropdown extends beyond right edge, force right alignment
-					if (dropdownRect.right > viewportWidth - 10) {
-						// Type assertion to HTMLElement
-						const dropdownElement = dropdown as HTMLElement;
-						dropdownElement.style.left = "auto";
-						dropdownElement.style.right = "0";
-					}
-				});
-			}
-		});
 
 		if (mobileMenuButton && mobileMenu && mobileMenuLinks) {
 			mobileMenuButton.addEventListener("click", () => {
@@ -303,29 +161,6 @@ import { SITE_TITLE } from "../consts";
 				} else {
 					mobileMenuLinks.classList.remove("menu-links-visible");
 				}
-			});
-		}
-
-		// Toggle mobile projects dropdown
-		if (
-			mobileProjectsButton &&
-			mobileProjectsDropdown &&
-			mobileProjectsIcon
-		) {
-			mobileProjectsButton.addEventListener("click", () => {
-				mobileProjectsDropdown.classList.toggle(
-					"mobile-dropdown-expanded",
-				);
-				mobileProjectsIcon.classList.toggle("rotate-icon");
-
-				// Update aria-expanded attribute
-				const isExpanded = mobileProjectsDropdown.classList.contains(
-					"mobile-dropdown-expanded",
-				);
-				mobileProjectsButton.setAttribute(
-					"aria-expanded",
-					isExpanded.toString(),
-				);
 			});
 		}
 	});

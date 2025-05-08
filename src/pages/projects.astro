@@ -1,0 +1,92 @@
+---
+import DefaultLayout from "../layouts/DefaultLayout.astro";
+import ExperienceTimeline from "../components/ExperienceTimeline.astro";
+import ProjectList from "../components/ProjectList.astro";
+import SchoolsSection from "../components/SchoolsSection.astro";
+
+const experiences = [
+    {
+        company: "SAIA",
+        period: "2025 - Present",
+        description:
+            "At SAIA, I am getting to discover the world of Hardware, helping the team integrate a highly automated solution for efficient greenhouse management",
+        logo: "/assets/logos/saia.png",
+        url: "https://saia.com",
+    },
+    {
+        company: "Mollie",
+        period: "2019 - 2025",
+        description:
+            "At Mollie I got to experience a bit what building highly reliable applications at scale looks like. In the five years I have worked on many projects from credit card processing, to tools for SaaS business of various types as well as rebuilding the foundation of the API which served, at the time, more than 50 million requests every day",
+        logo: "/assets/logos/mollie.svg",
+        url: "https://mollie.com",
+    },
+    {
+        company: "Fixico",
+        period: "2016 - 2019",
+        description:
+            "At Fixico I got to truly discover my love for software development. As part of a small but well knit team, we built a platform that helped significantly improve car repair for both customers and businesses alike",
+        logo: "/assets/logos/fixico.svg",
+        url: "https://fixico.nl",
+    },
+];
+
+const projects = [
+    {
+        title: "ISS Tracker",
+        description: "Real-time tracking of the International Space Station.",
+        url: "/iss",
+    },
+    {
+        title: "Blog",
+        description:
+            "Thoughts and insights on technology, development, and more.",
+        url: "/blog",
+    },
+];
+
+const schools = [
+    {
+        name: "Politecnico di Torino",
+        logo: "/assets/logos/polito.png",
+        url: "https://www.polito.it",
+    },
+    {
+        name: "Tongji University",
+        logo: "/assets/logos/tongji.png",
+        url: "https://www.tongji.edu.cn",
+    },
+];
+---
+
+<DefaultLayout>
+    <div class="projects-page">
+        <div class="container mx-auto px-4 py-8">
+            <h1 class="text-2xl font-bold mb-8">My Work</h1>
+
+            <div class="flex gap-8">
+                <!-- Project Cards Section (Left) -->
+                <div class="w-2/3">
+                    <ProjectList projects={projects} />
+                </div>
+
+                <!-- Right Column -->
+                <div class="w-1/3 space-y-8">
+                    <!-- Experience Timeline Section -->
+                    <ExperienceTimeline experiences={experiences} />
+
+                    <!-- Schools Section -->
+                    <SchoolsSection schools={schools} />
+                </div>
+            </div>
+        </div>
+    </div>
+</DefaultLayout>
+
+<style>
+    .projects-page {
+        padding: 0;
+        max-width: 100%;
+        margin: 0 auto;
+    }
+</style>
